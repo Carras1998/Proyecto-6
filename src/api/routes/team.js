@@ -1,5 +1,6 @@
 const {
   getTeams,
+  getTeamById,
   postTeams,
   updateTeams,
   deleteTeams
@@ -7,6 +8,7 @@ const {
 const teamsRouter = require('express').Router()
 
 teamsRouter.get('/', getTeams)
+teamsRouter.get('/:id', getTeamById)
 teamsRouter.post('/', postTeams)
 teamsRouter.put('/:id', updateTeams)
 teamsRouter.delete('/:id', deleteTeams)

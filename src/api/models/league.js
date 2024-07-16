@@ -6,7 +6,7 @@ const leagueSchema = new mongoose.Schema(
     country: { type: String, required: true, trim: true },
     foundation: { type: Number, required: true },
     logo: { type: String, required: true },
-    teams: [{ type: mongoose.Schema.Types.ObjectId, ref: 'team' }]
+    teams: [{ type: mongoose.Schema.Types.ObjectId, ref: 'teams' }]
   },
   { timestamps: true }
 )

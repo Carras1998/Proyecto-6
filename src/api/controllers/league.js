@@ -5,7 +5,24 @@ const getLeagues = async (req, res, next) => {
     const leagues = await League.find().populate('teams')
     return res.status(200).json(leagues)
   } catch (error) {
-    return res.status(400).json('error')
+    console.error(error)
+    return res
+      .status(400)
+      .json({ message: 'Error al obtener las ligas', error })
+  }
+}
+
+const getLeagueById = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const league = await League.findById(id).populate('teams')
+    if (!league) {
+      return res.status(404).json({ message: 'Liga no encontrada' })
+    }
+    return res.status(200).json(league)
+  } catch (error) {
+    console.error(error)
+    return res.status(400).json({ message: 'Error al obtener la liga', error })
   }
 }
 
@@ -15,31 +32,23 @@ const postLeagues = async (req, res, next) => {
     const leagueSaved = await newLeague.save()
     return res.status(201).json(leagueSaved)
   } catch (error) {
-    return res.status(400).json('error')
+    console.error(error)
+    return res.status(400).json({ message: 'Error al crear la liga', error })
   }
 }
 
 const updateLeagues = async (req, res, next) => {
   try {
     const { id } = req.params
-    const league = await League.findById(id)
-
-    league.name = req.body.name || league.name
-    league.country = req.body.country || league.country
-    league.foundation = req.body.foundation || league.foundation
-    league.logo = req.body.logo || league.logo
-
-    // Solo agregamos los equipos nuevos sin duplicar
-    req.body.teams.forEach((teamId) => {
-      if (!league.teams.includes(teamId)) {
-        league.teams.push(teamId)
-      }
-    })
-
-    const leagueUpdated = await league.save()
+    const leagueUpdated = await League.findByIdAndUpdate(id, req.body, {
+      new: true
+    }).populate('teams')
     return res.status(200).json(leagueUpdated)
   } catch (error) {
-    return res.status(400).json('error')
+    console.error(error)
+    return res
+      .status(400)
+      .json({ message: 'Error al actualizar la liga', error })
   }
 }
 
@@ -52,12 +61,14 @@ const deleteLeagues = async (req, res, next) => {
       elemento: leagueDeleted
     })
   } catch (error) {
-    return res.status(400).json('error')
+    console.error(error)
+    return res.status(400).json({ message: 'Error al eliminar la liga', error })
   }
 }
 
 module.exports = {
   getLeagues,
+  getLeagueById,
   postLeagues,
   updateLeagues,
   deleteLeagues

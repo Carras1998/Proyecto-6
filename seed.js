@@ -11,73 +11,79 @@ const seedDatabase = async () => {
     await League.deleteMany()
     await Team.deleteMany()
 
-    const league1 = new League({
+    const premierLeague = new League({
       name: 'Premier League',
-      country: 'Inglaterra',
+      country: 'UK',
       foundation: 1992,
-      logo: 'logo premier league',
+      logo: 'premier_league_logo',
       teams: []
     })
 
-    const league2 = new League({
-      name: 'La Liga EA Sports',
-      country: 'España',
+    const laLiga = new League({
+      name: 'La Liga',
+      country: 'Spain',
       foundation: 1929,
-      logo: 'logo la liga',
+      logo: 'la_liga_logo',
       teams: []
     })
 
-    const team1 = new Team({
+    await premierLeague.save()
+    await laLiga.save()
+
+    const manchesterUnited = new Team({
       name: 'Manchester United',
-      league: league1._id,
+      league: premierLeague._id,
       foundation: 1878,
-      logo: 'escudo man united',
+      logo: 'manchester_united_logo',
       stadium: 'Old Trafford',
       coach: 'Erik ten Hag',
       legends:
-        'Cristiano Ronaldo, Wayne Rooney, Van der Sar, Erik Cantona, Paul Scholes, Ryan Giggs, Roy Keane, George Best, Rio Ferdinand, Bobby Charlton, David Beckham'
+        'Sir Alex Ferguson, Cristiano Ronaldo, Wayne Rooney, Eric Cantona, Edwin Van Der Sar, Rian Giggs, Paul Schooles, Nani'
     })
 
-    const team2 = new Team({
+    const liverpool = new Team({
+      name: 'Liverpool',
+      league: premierLeague._id,
+      foundation: 1892,
+      logo: 'liverpool_logo',
+      stadium: 'Anfield',
+      coach: 'Jürgen Klopp',
+      legends:
+        'Steven Gerrard, Fernando Torres, Luis Suarez, Xabi Alonso, Pepe Reina'
+    })
+
+    const realMadrid = new Team({
       name: 'Real Madrid',
-      league: league2._id,
+      league: laLiga._id,
       foundation: 1902,
-      logo: 'escudo real madrid',
-      stadium: 'Santiago Bernabeu',
+      logo: 'real_madrid_logo',
+      stadium: 'Santiago Bernabéu',
       coach: 'Carlo Ancelotti',
       legends:
-        'Cristiano Ronaldo, Zinedine Zidane, Sergio Ramos, Raúl, Marcelo, Benzema, Modric, Kroos, Alfredo Di Stefano, Butragueño, Iker Casillas, Figo, Fernando Hierro, Puskas, Ronaldo, David Beckham'
+        'Alfredo Di Stéfano, Cristiano Ronaldo, Ronaldo Nazario, Sergio Ramos, Raúl, David Beckham, Iker Casillas, Fernando Hierro, Pepe, Marcelo, Luka Modric, Toni Kroos'
     })
 
-    const team3 = new Team({
-      name: 'Liverpool',
-      foundation: 1892,
-      logo: 'Escudo del club',
-      stadium: 'Anfield',
-      coach: 'Arne Slot',
-      legends:
-        'Steven Gerrard, Kenny Dalglish, Ian Rush, Fernando Torres, Xabi Alonso, Michael Owen, Dirk Kuyt'
-    })
-
-    const team4 = new Team({
+    const barcelona = new Team({
       name: 'FC Barcelona',
+      league: laLiga._id,
       foundation: 1899,
-      logo: 'Escudo del club',
+      logo: 'fc_barcelona_logo',
       stadium: 'Camp Nou',
-      coach: 'Hansi Flick',
+      coach: 'Xavi Hernandez',
       legends:
-        'Lionel Messi, Andrés Iniesta, Xavi, Carles Puyol, Gerard Piqué, Johan Cruyff, Maradona, Luis Suarez, Ronaldinho'
+        'Lionel Messi, Xavi Hernandez, Andres Iniesta, Carles Puyol, Gerard Pique, Victor Valdes, Johann Cruyff, Ronald Koeman, Eric Abidal, Jordi Alba, Sergio Busquets, Ronaldinho'
     })
 
-    league1.teams.push(team1._id, team3._id)
-    league2.teams.push(team2._id, team4._id)
+    await manchesterUnited.save()
+    await liverpool.save()
+    await realMadrid.save()
+    await barcelona.save()
 
-    await league1.save()
-    await league2.save()
-    await team1.save()
-    await team2.save()
-    await team3.save()
-    await team4.save()
+    premierLeague.teams.push(manchesterUnited._id, liverpool._id)
+    laLiga.teams.push(realMadrid._id, barcelona._id)
+
+    await premierLeague.save()
+    await laLiga.save()
 
     console.log('Base de datos sembrada con éxito')
     process.exit()
